@@ -19,6 +19,9 @@ dependencies = [
   "scikit-learn>=1.4",
   "joblib>=1.4",
 
+  # Feature Engineering (NOVO)
+  "statsmodels>=0.14",
+
   # Data
   "yfinance>=0.2.40",
 
@@ -41,7 +44,8 @@ dev = [
 test = [
   "pytest>=8.0",
   "pytest-cov",
-  "httpx"
+  "httpx",
+  "pandera>=0.20"  # NOVO (schema validation)
 ]
 
 # -------------------------------
@@ -70,13 +74,13 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = [
-  "E",  # pycodestyle
-  "F",  # pyflakes
-  "I",  # import sorting
-  "B",  # bugbear
+  "E",
+  "F",
+  "I",
+  "B",
 ]
 ignore = [
-  "E501"  # linha longa (já tratado pelo black)
+  "E501"
 ]
 
 # -------------------------------

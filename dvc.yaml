@@ -1,7 +1,7 @@
 stages:
   ingest:
     cmd: >
-      python data/ingest.py
+      PYTHONPATH=. python data/ingest.py
       --ticker ${data.ticker}
       --start ${data.start}
       --end ${data.end}
@@ -13,20 +13,46 @@ stages:
     params:
       - data
 
+  feature_engineering:
+    cmd: >
+      PYTHONPATH=. python src/features/feature_engineering.py
+    deps:
+      - src/features/feature_engineering.py
+      - ${data.output}
+      - pyproject.toml
+    outs:
+      - data/raw/stock_features.csv
+      - models/scaler_features.joblib
+      - models/pca_features.joblib
+    metrics:
+      - reports/pca_explained_variance.csv:
+          cache: false
+    plots:
+      - reports/correlation_matrix.csv:
+          cache: false
+      - reports/vif_report.csv:
+          cache: false
+      - reports/selected_features.csv:
+          cache: false
+    params:
+      - data.output
+
   train:
     cmd: >
-      python src/models/train.py
+      PYTHONPATH=. python src/models/train.py
       --ticker ${train.ticker}
       --start ${train.start}
       --end ${train.end}
       --janela ${train.janela}
       --epochs ${train.epochs}
       --batch ${train.batch}
-      --data-path ${train.data_path}
       --keras
     deps:
       - src/models/train.py
-      - ${data.output}
+      - src/features/feature_engineering.py
+      - data/raw/stock_features.csv
+      - models/scaler_features.joblib
+      - models/pca_features.joblib
       - pyproject.toml
     outs:
       - ${baseline.modelo_pytorch}
@@ -38,11 +64,10 @@ stages:
       - baseline.modelo_pytorch
       - baseline.modelo_sklearn
       - baseline.modelo_keras
-      - data.output
 
   baseline:
     cmd: >
-      python src/models/baseline.py
+      PYTHONPATH=. python src/models/baseline.py
       --ticker ${baseline.ticker}
       --start ${baseline.start}
       --end ${baseline.end}
@@ -51,25 +76,26 @@ stages:
       --modelo-sklearn ${baseline.modelo_sklearn}
       --modelo ${baseline.modelo_keras}
       --keras
-      --data-path ${baseline.data_path}
     deps:
       - src/models/baseline.py
-      - ${data.output}
+      - data/raw/stock_features.csv
       - ${baseline.modelo_pytorch}
       - ${baseline.modelo_sklearn}
       - ${baseline.modelo_keras}
       - pyproject.toml
     outs:
       - reports/metrics_comparison.csv
+      - reports/model_predictions_comparison.png
     metrics:
-      - reports/metrics.json
+      - reports/metrics.json:
+          cache: false
     params:
       - baseline
       - train.janela
-      - data.output
 
   plots:
-    cmd: python src/utils/plot_metrics.py
+    cmd: >
+      PYTHONPATH=. python src/utils/plot_metrics.py
     deps:
       - src/utils/plot_metrics.py
       - reports/metrics.json

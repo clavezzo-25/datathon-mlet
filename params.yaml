@@ -4,6 +4,12 @@ data:
   end: "2027-04-30"
   output: data/raw/stock_data.csv
 
+features:
+  input: data/raw/stock_data.csv
+  output: data/raw/stock_features.csv
+  scaler: models/scaler_features.joblib
+  pca: models/pca_features.joblib
+
 train:
   ticker: ITUB4.SA
   start: "2025-04-01"
@@ -11,7 +17,6 @@ train:
   janela: 90
   epochs: 40
   batch: 32
-  data_path: data/raw/stock_data.csv
 
 baseline:
   ticker: ITUB4.SA
@@ -20,4 +25,3 @@ baseline:
   modelo_pytorch: models/modelo_ITUB4.SA_pytorch.pth
   modelo_sklearn: models/modelo_ITUB4.SA_sklearn.joblib
   modelo_keras: models/modelo_ITUB4.SA.keras
-  data_path: data/raw/stock_data.csv

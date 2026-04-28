@@ -19,8 +19,12 @@ services:
       - .:/app
     ports:
       - "5000:5000"
-    command: mlflow ui --host 0.0.0.0 --backend-store-uri sqlite:///mlflow/mlflow.db
-  
+    command: >
+      mlflow ui
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:///mlflow/mlflow.db
+
   test:
     build:
       context: .
@@ -29,4 +33,4 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-    command: pytest
+    command: pytest -v

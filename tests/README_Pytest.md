@@ -33,45 +33,48 @@ tests/
 ├── test_baseline.py
 ├── test_train.py
 ├── test_plot_metrics.py
+├── test_feature_engineering.py
+
 ⚙️ Pré-requisitos
 
-# Execução local (sem Docker)
+Execução local (sem Docker)
 Python 3.13
+
 Ambiente virtual ativo (recomendado)
 
-# Execução via Docker
+Execução via Docker
+
 Docker Desktop instalado
 Docker em execução
-(WSL integrado, caso esteja usando Linux via Windows)
+(WSL integrado, se estiver usando Windows)
 
 🧪 Execução LOCAL (sem Docker)
 
 Criar ambiente virtual
 python -m venv .venv
 source .venv/bin/activate
+
 Instalar dependências
 pip install -e ".[test]"
 
-# Rodar testes
+Rodar testes
 pytest
 
 🐳 Execução via Docker (RECOMENDADO)
 
 O projeto possui ambiente isolado para testes utilizando Dockerfile.test.
 
-🔧 Build da imagem de teste
-
+🔧 Build da imagem
 docker compose build test
 
-ou (modo manual):
+ou:
 
 docker build -f Dockerfile.test -t datathon-mlet-test .
 
-▶️ Rodar os testes
-
-Usando Docker Compose
+▶️ Executar testes
+Docker Compose
 docker compose run --rm test
-Usando Docker direto
+Docker direto
 docker run --rm datathon-mlet-test
 
 📊 Saída esperada
@@ -80,7 +83,28 @@ collected XX items
 tests/test_api.py::test_health_returns_200 PASSED
 tests/test_ingest.py::test_ingest_success PASSED
 tests/test_baseline.py::test_avaliar_modelo PASSED
+tests/test_feature_engineering.py::test_run_pipeline PASSED
 ...
+
+🧪 Testes de Feature Engineering
+
+O arquivo:
+
+tests/test_feature_engineering.py
+
+valida:
+
+criação das features do EDA
+tratamento de outliers
+remoção de correlação
+cálculo de VIF
+seleção automática de features
+aplicação de scaler
+aplicação de PCA
+geração de relatórios
+execução completa do pipeline
+
+👉 Esses testes garantem que o pipeline funcione mesmo com mudanças nas features.
 
 🧠 Observações importantes
 
@@ -90,7 +114,7 @@ O projeto utiliza configuração no pyproject.toml:
 
 pythonpath = ["."]
 
-👉 Isso permite que o pytest reconheça:
+👉 Permite que o pytest encontre:
 
 src/
 data/
@@ -100,17 +124,17 @@ app/
 
 Os testes utilizam dados sintéticos:
 
-Simulação de dados de ações
-CSVs temporários
-Cenários inválidos
+simulação de dados de ações
+arquivos CSV temporários
+cenários inválidos
 
 ✔ 3. Testes com Mock
 
 Uso de monkeypatch para:
 
-Simular yfinance.download
-Evitar chamadas externas
-Garantir execução offline
+simular yfinance.download
+evitar chamadas externas
+garantir execução offline
 
 ✔ 4. Execução em CPU
 
@@ -122,38 +146,39 @@ GPU will not be used
 ✔ 5. Docker vs Local
 
 Execução	Quando usar
-Local (pytest)	Desenvolvimento rápido
-Docker	Ambiente isolado / CI / padrão
+Local (pytest)	desenvolvimento rápido
+Docker	ambiente isolado / CI
 
 ✔ 6. Docker Desktop
 
 Para execução via Docker:
 
-É obrigatório ter o Docker Desktop instalado
-O serviço deve estar em execução
-No Windows com WSL, é necessário ativar a integração
+Docker Desktop deve estar instalado
+serviço deve estar em execução
+WSL integrado (Windows)
 
 🧪 Cobertura de Testes
 pytest --cov=src --cov=data
 
-Ou:
+ou:
 
 pytest --cov=src --cov=data --cov-report=term-missing
 
 🚀 Boas práticas aplicadas
+
 ✔ Testes isolados
-✔ Dados sintéticos
+✔ Uso de dados sintéticos
 ✔ Mock de APIs externas
-✔ Testes de ML (treino + inferência)
+✔ Testes de Machine Learning
+✔ Testes de Feature Engineering
 ✔ Testes de geração de gráficos
 ✔ Validação de erros
 
 📌 Execução resumida
 
-# Local
+Local
 pip install -e ".[test]"
 pytest
-
-# Docker
+Docker
 docker compose build test
 docker compose run --rm test

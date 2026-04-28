@@ -1,147 +1,159 @@
 schema: '2.0'
 stages:
   train:
-    cmd: "python src/models/train.py --ticker ITUB4.SA --start 2025-04-01 --end 2026-04-30
-      --janela 90 --epochs 40 --batch 32 --data-path data/raw/stock_data.csv --keras\n"
+    cmd: "PYTHONPATH=. python src/models/train.py --ticker ITUB4.SA --start 2025-04-01
+      --end 2027-04-30 --janela 90 --epochs 40 --batch 32 --keras\n"
     deps:
-    - path: data/raw/stock_data.csv
+    - path: data/raw/stock_features.csv
       hash: md5
-      md5: 94a2af7394e7b111623b2f0bf5cf2471
-      size: 23755
+      md5: 5a3263e3f84ef5af11edbb6885473a6c
+      size: 66540
+    - path: models/pca_features.joblib
+      hash: md5
+      md5: b6003d417e9e9530283eb10ac864ac2b
+      size: 1518
+    - path: models/scaler_features.joblib
+      hash: md5
+      md5: d536051670067836d230a00b1ee3675d
+      size: 966
     - path: pyproject.toml
       hash: md5
-      md5: 8fb8c8cd06db40a5ef79cbf2001bc780
-      size: 1658
+      md5: c0237ceb297431ebaa0d70163ea7a780
+      size: 1664
+    - path: src/features/feature_engineering.py
+      hash: md5
+      md5: f8b53376d4431421f102bd09d5c78e3a
+      size: 11736
     - path: src/models/train.py
       hash: md5
-      md5: e7ac31075ac3d3385d32965e1386c945
-      size: 10878
+      md5: 949195b11903781902c1278692d1f617
+      size: 15136
     params:
       params.yaml:
         baseline.modelo_keras: models/modelo_ITUB4.SA.keras
         baseline.modelo_pytorch: models/modelo_ITUB4.SA_pytorch.pth
         baseline.modelo_sklearn: models/modelo_ITUB4.SA_sklearn.joblib
-        data.output: data/raw/stock_data.csv
         train:
           ticker: ITUB4.SA
           start: '2025-04-01'
-          end: '2026-04-30'
+          end: '2027-04-30'
           janela: 90
           epochs: 40
           batch: 32
-          data_path: data/raw/stock_data.csv
     outs:
     - path: mlflow/mlflow.db
       hash: md5
-      md5: 436425e448ac9f1045c21537e6ab1d40
+      md5: 7489dd2d326b8eef99c5e7e9d3163265
       size: 663552
     - path: models/modelo_ITUB4.SA.keras
       hash: md5
-      md5: de96710a5604d5fe7ef7cb893d2527c9
-      size: 404486
+      md5: a4ef2af7feb2716d5d1ceb9c94bb310b
+      size: 416486
     - path: models/modelo_ITUB4.SA_pytorch.pth
       hash: md5
-      md5: 882e99813d50fd8721708b9eaa11ced8
-      size: 35029
+      md5: 82335fe2c582098daa468cb4b0f47437
+      size: 150229
     - path: models/modelo_ITUB4.SA_sklearn.joblib
       hash: md5
-      md5: 164e2e0c6bfde57a4853b812acb70ae4
-      size: 262156
+      md5: 07e304473ad5c9647ff9995c366f997e
+      size: 1184591
   baseline:
-    cmd: "python src/models/baseline.py --ticker ITUB4.SA --start 2025-04-01 --end
-      2026-04-30 --janela 90 --modelo-pytorch models/modelo_ITUB4.SA_pytorch.pth --modelo-sklearn
-      models/modelo_ITUB4.SA_sklearn.joblib --modelo models/modelo_ITUB4.SA.keras
-      --keras --data-path data/raw/stock_data.csv\n"
+    cmd: "PYTHONPATH=. python src/models/baseline.py --ticker ITUB4.SA --start 2025-04-01
+      --end 2027-04-30 --janela 90 --modelo-pytorch models/modelo_ITUB4.SA_pytorch.pth
+      --modelo-sklearn models/modelo_ITUB4.SA_sklearn.joblib --modelo models/modelo_ITUB4.SA.keras
+      --keras\n"
     deps:
-    - path: data/raw/stock_data.csv
+    - path: data/raw/stock_features.csv
       hash: md5
-      md5: 94a2af7394e7b111623b2f0bf5cf2471
-      size: 23755
+      md5: 5a3263e3f84ef5af11edbb6885473a6c
+      size: 66540
     - path: models/modelo_ITUB4.SA.keras
       hash: md5
-      md5: de96710a5604d5fe7ef7cb893d2527c9
-      size: 404486
+      md5: a4ef2af7feb2716d5d1ceb9c94bb310b
+      size: 416486
     - path: models/modelo_ITUB4.SA_pytorch.pth
       hash: md5
-      md5: 882e99813d50fd8721708b9eaa11ced8
-      size: 35029
+      md5: 82335fe2c582098daa468cb4b0f47437
+      size: 150229
     - path: models/modelo_ITUB4.SA_sklearn.joblib
       hash: md5
-      md5: 164e2e0c6bfde57a4853b812acb70ae4
-      size: 262156
+      md5: 07e304473ad5c9647ff9995c366f997e
+      size: 1184591
     - path: pyproject.toml
       hash: md5
-      md5: 8fb8c8cd06db40a5ef79cbf2001bc780
-      size: 1658
+      md5: c0237ceb297431ebaa0d70163ea7a780
+      size: 1664
     - path: src/models/baseline.py
       hash: md5
-      md5: 8ede5fde9ae5a001628dd66b10bf4534
-      size: 7927
+      md5: 1ae56a3a318d21df65cf444d1543cc0f
+      size: 11467
     params:
       params.yaml:
         baseline:
           ticker: ITUB4.SA
           start: '2025-04-01'
-          end: '2026-04-30'
+          end: '2027-04-30'
           modelo_pytorch: models/modelo_ITUB4.SA_pytorch.pth
           modelo_sklearn: models/modelo_ITUB4.SA_sklearn.joblib
           modelo_keras: models/modelo_ITUB4.SA.keras
-          data_path: data/raw/stock_data.csv
-        data.output: data/raw/stock_data.csv
         train.janela: 90
     outs:
     - path: reports/metrics.json
       hash: md5
-      md5: f22a1ce5ce23b79a9cbba36c6c13349d
-      size: 370
+      md5: 8bacd14213c97c89f65778d167642e98
+      size: 368
     - path: reports/metrics_comparison.csv
       hash: md5
-      md5: e2eabc74b9bb2f887167713029b5d6a9
-      size: 148
+      md5: 8a7b1b64e225661d9599725ef1993906
+      size: 146
+    - path: reports/model_predictions_comparison.png
+      hash: md5
+      md5: 3c40bff35380ac264247a511c895864c
+      size: 107473
   ingest:
-    cmd: "python data/ingest.py --ticker ITUB4.SA --start 2025-04-01 --end 2026-04-30
-      --output data/raw/stock_data.csv\n"
+    cmd: "PYTHONPATH=. python data/ingest.py --ticker ITUB4.SA --start 2025-04-01
+      --end 2027-04-30 --output data/raw/stock_data.csv\n"
     deps:
     - path: data/ingest.py
       hash: md5
-      md5: 8070f858a72b4689371dae05edd3049b
-      size: 830
+      md5: 7136d216f0729b0d7e8ea41d2d8f971c
+      size: 831
     params:
       params.yaml:
         data:
           ticker: ITUB4.SA
           start: '2025-04-01'
-          end: '2026-04-30'
+          end: '2027-04-30'
           output: data/raw/stock_data.csv
     outs:
     - path: data/raw/stock_data.csv
       hash: md5
-      md5: 94a2af7394e7b111623b2f0bf5cf2471
-      size: 23755
+      md5: 1ffad6af4e8c9a52ab5d44f6d843ffb3
+      size: 24805
   plots:
-    cmd: python src/utils/plot_metrics.py
+    cmd: "PYTHONPATH=. python src/utils/plot_metrics.py\n"
     deps:
     - path: reports/metrics.json
       hash: md5
-      md5: f22a1ce5ce23b79a9cbba36c6c13349d
-      size: 370
+      md5: 8bacd14213c97c89f65778d167642e98
+      size: 368
     - path: src/utils/plot_metrics.py
       hash: md5
-      md5: 79a8263b6ac73fd4c12904e132e41508
-      size: 1691
+      md5: e6a596df2bd1b45f031065882bb6152f
+      size: 1693
     outs:
     - path: reports/comparacao_modelos.png
       hash: md5
-      md5: 92f4150e16668f9f41ddf20f474db50c
-      size: 21987
+      md5: aa7dd6d26d15b53f00b67b3aaa45f3fb
+      size: 22594
     - path: reports/mape.png
       hash: md5
-      md5: c579beff1c38ce4240fc641accf2137e
-      size: 19454
+      md5: 152f7cb012fe889c400aa7f1c19d5a80
+      size: 19797
     - path: reports/ranking_mae.png
       hash: md5
-      md5: 7241d776cce00a34b1ef04cd3040ad32
-      size: 23065
+      md5: e6e94f04040b6e25f37dc52681536cf7
+      size: 20036
   trading:
     cmd: "python src/utils/trading_simulation.py --data-path data/raw/stock_data.csv
       --janela 90 --modelo-pytorch models/modelo_ITUB4.SA_pytorch.pth --modelo-sklearn
@@ -192,3 +204,50 @@ stages:
       hash: md5
       md5: 85962ae04bdab93a01c6b0dc516d943e
       size: 274
+  feature_engineering:
+    cmd: "PYTHONPATH=. python src/features/feature_engineering.py\n"
+    deps:
+    - path: data/raw/stock_data.csv
+      hash: md5
+      md5: 1ffad6af4e8c9a52ab5d44f6d843ffb3
+      size: 24805
+    - path: pyproject.toml
+      hash: md5
+      md5: c0237ceb297431ebaa0d70163ea7a780
+      size: 1664
+    - path: src/features/feature_engineering.py
+      hash: md5
+      md5: f8b53376d4431421f102bd09d5c78e3a
+      size: 11736
+    params:
+      params.yaml:
+        data.output: data/raw/stock_data.csv
+    outs:
+    - path: data/raw/stock_features.csv
+      hash: md5
+      md5: 5a3263e3f84ef5af11edbb6885473a6c
+      size: 66540
+    - path: models/pca_features.joblib
+      hash: md5
+      md5: b6003d417e9e9530283eb10ac864ac2b
+      size: 1518
+    - path: models/scaler_features.joblib
+      hash: md5
+      md5: d536051670067836d230a00b1ee3675d
+      size: 966
+    - path: reports/correlation_matrix.csv
+      hash: md5
+      md5: b6d94046d22173ca4baa782c79cb3f05
+      size: 737
+    - path: reports/pca_explained_variance.csv
+      hash: md5
+      md5: 264592aa558a5c8eb46964e948aa1fc4
+      size: 171
+    - path: reports/selected_features.csv
+      hash: md5
+      md5: c4a87fed37a12fe91934095da804280d
+      size: 41
+    - path: reports/vif_report.csv
+      hash: md5
+      md5: b08276beddaddce484a00be762c5ed6b
+      size: 156

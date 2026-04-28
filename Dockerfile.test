@@ -4,15 +4,30 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+RUN apt-get update && apt-get install -y \
     git \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . /app
+RUN useradd -m appuser
 
-RUN pip install --upgrade pip setuptools wheel
-RUN pip install -e ".[test]"
+COPY pyproject.toml .
+COPY README.md .
+COPY src/ src/
+COPY data/ data/
+COPY tests/ tests/
 
-CMD ["pytest"]
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install ".[test]"
+
+COPY . .
+
+RUN mkdir -p data/raw models reports mlflow \
+    && chown -R appuser:appuser /app \
+    && git config --global --add safe.directory /app
+
+USER appuser
+
+CMD ["pytest", "-v"]

@@ -18,3 +18,5 @@ mlflow/artifacts
 .pytest_cache
 .coverage
 htmlcov
+
+mlruns
